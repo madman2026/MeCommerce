@@ -1,22 +1,8 @@
 <?php
 
-pest()->extend(Tests\DuskTestCase::class)
-//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
-    ->in('Browser');
-
-pest()->extend(Tests\DuskTestCase::class)
-//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
-    ->in('Browser');
-
-pest()->extend(Tests\DuskTestCase::class)
-//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
-    ->in('Browser');
-
-pest()->extend(Tests\DuskTestCase::class)
-//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
-    ->in('Browser');
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\DuskTestCase;
 use Tests\TestCase;
 
 /*
@@ -29,6 +15,11 @@ use Tests\TestCase;
 | need to change it using the "pest()" function to bind different classes or traits.
 |
 */
+
+pest()->extend(DuskTestCase::class)
+    ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
