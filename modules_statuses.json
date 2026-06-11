@@ -1,3 +1,8 @@
 {
-    "User": true
+    "User": true,
+    "Core": true,
+    "Catalog": true,
+    "Cart": true,
+    "Order": true,
+    "Payment": true
 }
