@@ -1,0 +1,82 @@
+@props([
+    'target' => null,
+    'placement' => 'bottom',
+    // When null (default), the index is auto-assigned via
+    // TourStepCounter::next() based on document order under the
+    // enclosing tour parent. Explicit :index="N" bypasses the
+    // auto-assignment — useful when steps render conditionally
+    // and the developer needs control over the numbering.
+    'index' => null,
+    'scope' => null,
+])
+
+@php
+    use Pushery\WireKit\Support\TourStepCounter;
+    use Pushery\WireKit\WireKit;
+
+    // Auto-assign the index from the per-render counter when the
+    // developer didn't supply one. The parent tour component
+    // reset the counter to 0; sibling steps each pick the next
+    // integer in document-render order.
+    $resolvedIndex = $index ?? TourStepCounter::next();
+
+    // Tour step — individual tooltip-like popup positioned near a target element.
+    // The initial off-screen position (left/top: -9999px) is set via a CSS rule
+    // in dist/wirekit.css scoped to [data-wk-tour-step] — it prevents a visible
+    // flicker at (0, 0) between Alpine's x-show flip and Floating UI's async
+    // positioning. Floating UI's Object.assign(floating.style, { left, top })
+    // writes inline style values that outrank the stylesheet rule once
+    // computePosition() resolves, so the panel jumps straight to its final spot.
+    $panelClasses = WireKit::resolveClasses('tour.step', 'base', implode(' ', [
+        'fixed z-[var(--z-wk-modal)]',
+        'w-80',
+        'bg-[var(--color-wk-bg-elevated)]',
+        'border-[length:var(--border-wk-width)]',
+        'border-[var(--color-wk-border)]',
+        'rounded-[var(--radius-wk-lg)]',
+        'shadow-[var(--shadow-wk-lg)]',
+        'p-[var(--padding-wk-x-md)]',
+        'text-[length:var(--text-wk-md)]',
+        'text-[color:var(--color-wk-text)]',
+    ]), $scope);
+@endphp
+
+<div
+    x-show="currentStep === {{ (int) $resolvedIndex }}"
+    data-wk-tour-step="{{ (int) $resolvedIndex }}"
+    data-wk-target="{{ $target }}"
+    data-wk-placement="{{ $placement }}"
+    role="dialog"
+    aria-label="Tour step {{ $resolvedIndex + 1 }}"
+    {{ $attributes->class([$panelClasses]) }}
+    x-cloak
+>
+    {{-- Step title --}}
+    @isset($title)
+        <h3 class="font-[number:var(--font-wk-heading-weight)] text-[length:var(--text-wk-lg)] mb-[var(--padding-wk-y-xs)]">{{ $title }}</h3>
+    @endisset
+
+    {{-- Step body --}}
+    <div class="text-[color:var(--color-wk-text-muted)] mb-[var(--padding-wk-y-md)]">
+        {{ $slot }}
+    </div>
+
+    {{-- Step footer — navigation + progress --}}
+    <div class="flex items-center justify-between">
+        <span class="text-[length:var(--text-wk-sm)] text-[color:var(--color-wk-text-muted)] tabular-nums" x-text="progressText"></span>
+        <div class="flex items-center gap-[var(--gap-wk-sm)]">
+            <button
+                type="button"
+                x-show="currentStep > 0"
+                x-on:click="prev()"
+                class="p-[var(--padding-wk-y-xs)] text-[length:var(--text-wk-sm)] cursor-pointer text-[color:var(--color-wk-text-muted)] hover:text-[color:var(--color-wk-text)] rounded-[var(--radius-wk-sm)] hover:bg-[var(--color-wk-bg-subtle)] focus:outline-none focus-visible:ring-[length:var(--ring-wk-width)] focus-visible:ring-[var(--color-wk-ring)]"
+            >Back</button>
+            <button
+                type="button"
+                x-on:click="next()"
+                class="p-[var(--padding-wk-y-xs)] text-[length:var(--text-wk-sm)] cursor-pointer bg-[var(--color-wk-accent)] text-[color:var(--color-wk-accent-fg)] rounded-[var(--radius-wk-md)] hover:bg-[var(--color-wk-accent-hover)] focus:outline-none focus-visible:ring-[length:var(--ring-wk-width)] focus-visible:ring-[var(--color-wk-ring)]"
+                x-text="currentStep === totalSteps - 1 ? 'Finish' : 'Next'"
+            ></button>
+        </div>
+    </div>
+</div>
