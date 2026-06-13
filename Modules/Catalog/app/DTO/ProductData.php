@@ -2,7 +2,7 @@
 
 namespace Modules\Catalog\DTO;
 
-use Modules\Catalog\States\ProductState;
+use Modules\Catalog\ProductState;
 use Spatie\LaravelData\Data;
 
 class ProductData extends Data
@@ -17,5 +17,7 @@ class ProductData extends Data
         public ?string $description,
         public ProductState $state,
         public int $categoryId,
+        public ?array $images,
+        public ?int $quantity = 1,
     ) {}
 }

@@ -11,7 +11,11 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'image' => 'image|nullable|max:5000',
+            'name' => 'required|string|min:2',
+            'sku' => 'required|string|unique:products,sku'
+        ];
     }
 
     /**

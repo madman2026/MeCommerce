@@ -13,10 +13,10 @@ use Modules\Cart\Models\Cart;
 use Modules\Order\Models\Order;
 use Modules\Payment\Models\Payment;
 use Modules\User\Database\Factories\UserFactory;
-use Modules\User\States\UserState;
+use Modules\User\UserState;
 use Spatie\ModelStates\HasStates;
 
-#[Fillable(['name', 'email', 'mobile', 'status', 'last_login_at', 'password'])]
+#[Fillable(['name', 'email', 'mobile', 'state', 'last_login_at', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {

@@ -1,6 +1,8 @@
 <?php
 
-namespace Modules\Catalog\States;
+namespace Modules\Payment\States;
+
+use Modules\Payment\PaymentState;
 
 class Pending extends PaymentState
 {

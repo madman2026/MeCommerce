@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('sale_price')->nullable();
             $table->integer('stock');
             $table->integer('weight');
-            $table->string('status');
+            $table->string('state');
             $table->timestamp('published_at');
             $table->timestamps();
         });

@@ -1,6 +1,8 @@
 <?php
 
-namespace Modules\Catalog\States;
+namespace Modules\Order\States;
+
+use Modules\Order\OrderState;
 
 class Cancelled extends OrderState
 {

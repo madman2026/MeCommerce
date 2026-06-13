@@ -18,9 +18,9 @@ use Spatie\ModelStates\HasStates;
     'description' ,
     'stock' ,
     'weight' ,
-    'states' ,
+    'state' ,
     'slug' ,
-    'published',
+    'published_at',
     'sku',
 ])]
 class Product extends Model
@@ -30,7 +30,8 @@ class Product extends Model
     protected function casts()
     {
         return [
-            'state' => ProductState::class
+            'state' => ProductState::class,
+            'published_at' => 'timestamp'
         ];
     }
 

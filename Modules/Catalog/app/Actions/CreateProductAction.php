@@ -2,30 +2,32 @@
 
 namespace Modules\Catalog\Actions;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Catalog\DTO\ProductData;
-use Spatie\QueueableAction\QueueableAction;
+use Modules\Catalog\Events\ProductCreated;
+use Modules\Catalog\Models\Product;
+use Modules\User\Models\User;
 
 class CreateProductAction
 {
-    use QueueableAction;
-
-    /**
-     * Create a new action instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function execute(ProductData $data): Product
     {
-        // Prepare the action for execution, leveraging constructor injection.
-    }
+        $product = Product::create($data->except('categoryId' , 'images')->toArray());
 
-    /**
-     * Execute the action.
-     *
-     * @return mixed
-     */
-    public function execute(ProductData $data)
-    {
-        
+        $product->categories()->sync($data->categoryId);
+
+        app(CreateInventoryAction::class)->execute(
+            product: $product,
+            quantity: $data->quantity
+        );
+
+        app(CreateProductImageAction::class)->execute(
+            product: $product,
+            images: $data->images
+        );
+
+        ProductCreated::dispatch($product);
+
+        return $product->fresh();
     }
 }

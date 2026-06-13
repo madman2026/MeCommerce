@@ -5,6 +5,7 @@ namespace Modules\Catalog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Catalog\Actions\CreateProductAction;
+use Modules\Catalog\Actions\UploadProductImageAction;
 use Modules\Catalog\DTO\ProductData;
 use Modules\Catalog\Http\Requests\ProductRequest;
 
@@ -29,12 +30,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request) 
-    {
-        $productData = ProductData::validateAndCreate($request->validated());
 
-        app(CreateProductAction::class)->onQueue('ecommerce')->execute($productData);
-    }
 
     /**
      * Show the specified resource.

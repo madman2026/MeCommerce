@@ -4,6 +4,8 @@ namespace Modules\Cart\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+use function Illuminate\Support\now;
+
 class CartFactory extends Factory
 {
     /**
@@ -16,7 +18,10 @@ class CartFactory extends Factory
      */
     public function definition(): array
     {
-        return [];
+        return [
+            'session_id' => rand(10,10000),
+            'exipres_at' => now()->addDays(10)
+        ];
     }
 }
 
